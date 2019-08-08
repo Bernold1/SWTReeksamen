@@ -78,7 +78,6 @@ namespace SWTReeksamen.Test.Unit
             Assert.That(_uut.IsHeatOn, Is.True);
         }
 
-
         [TestCase( 3)]
         [TestCase( 4)]
         [TestCase( 5)]
@@ -89,8 +88,6 @@ namespace SWTReeksamen.Test.Unit
             Assert.That(_uut.IsHeatOn, Is.False);
         }
 
-
-
         [Test]
         public void HandleTempChangedEvent_InStateOn_ThermalRelayTurnOff_IsCalledOnce()
         {
@@ -100,7 +97,6 @@ namespace SWTReeksamen.Test.Unit
             _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = 3 });
             _thermalRelay.Received(1).TurnOff();
         }
-
 
         [Test]
         public void HandleTempChangedEvent_InStateOn_LogRelayOff_IsCalledOnce()
@@ -114,16 +110,20 @@ namespace SWTReeksamen.Test.Unit
         [Test]
         public void HandleTempChangedEvent_InStateOn_TemperatureIsNotWarmEnough_ThermalRelayTurnOff_IsNotCalled()
         {
+            //Tester at relæet ikke slukker hvis temperaturen endnu ikke er nået til 2 grader
+            //selvom eventet bliver raised flere gange
             _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = -2 });
             _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = 1 });
             _thermalRelay.DidNotReceive().TurnOff();
         }
 
-        [TestCase(1, -4)]
+        [TestCase(4, -4)]
         [TestCase(2, -2)]
         [TestCase(3, -1)]
         public void HandleTempChangedEvent_InStateOff_StillHeating_ThermalRelayTurnOn_OnlyCalledOnce_WithMultipleRaises(int calls, int testTemp)
         {
+            //Der bliver her testet at selvom at TempChangedEventet bliver raised mere end en gang og forbliver samme state
+            //at relæet kun modtager en turnon kald
             for (int i = 0; i < calls; i++)
             {
                 _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = testTemp });
@@ -131,11 +131,12 @@ namespace SWTReeksamen.Test.Unit
             _thermalRelay.Received(1).TurnOn();
         }
 
-        [TestCase(1, -4)]
+        [TestCase(4, -4)]
         [TestCase(2, -2)]
         [TestCase(3, -1)]
         public void HandleTempChangedEvent_InStateOff_StillHeating_LogRelayOn_OnlyCalledOnce_WithMultipleRaises(int calls, int testTemp)
         {
+            //Tester at der kun logges en gang selvom eventet raises mere end en gang
             for (int i = 0; i < calls; i++)
             {
                 _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = testTemp });
@@ -143,12 +144,13 @@ namespace SWTReeksamen.Test.Unit
             _log.Received(1).LogRelayOn();
         }
 
-        [TestCase(1, 3)]
+        [TestCase(4, 3)]
         [TestCase(2, 4)]
         [TestCase(3, 3)]
         public void HandleTempChangedEvent_InStateOff_RaisedMultipleTimesButTemperaturWithInBoundaries(int calls, int testTemp)
         {
-            //Tester at relæet ikke prøver at slukke når temperaturen er udenfor boundary værdierne men temperaturen skifter flere gange
+            //Tester at relæet ikke prøver at slukke når temperaturen er udenfor boundary værdierne
+            //men temperaturen skifter flere gange(Eventet bliver raised mere end en gang)
             for (int i = 0; i < calls; i++)
             {
                 _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = testTemp });
