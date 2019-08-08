@@ -39,7 +39,7 @@ namespace SWTReeksamen.Controllers
                     {
                         state = State.Tændt;
                         thermalRelay.TurnOn();
-                        log.LogRelayOn();
+                        log.LogRelayOn(temp);
                     }
 
                     break;
@@ -49,7 +49,7 @@ namespace SWTReeksamen.Controllers
                     {
                         state = State.Slukket;
                         thermalRelay.TurnOff();
-                        log.LogRelayOff();
+                        log.LogRelayOff(temp);
                     }
 
                     break;

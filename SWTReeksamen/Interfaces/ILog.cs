@@ -4,9 +4,7 @@ namespace SWTReeksamen.Interfaces
 {
     public interface ILog
     {
-        void LogRelayOn();
-        void LogRelayOff();
-        void LogCameraOn();
-        void LogCameraOff();
+        void LogRelayOn(int temp);
+        void LogRelayOff(int temp);
     }
 }

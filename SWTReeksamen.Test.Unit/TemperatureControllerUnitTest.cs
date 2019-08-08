@@ -9,7 +9,7 @@ namespace SWTReeksamen.Test.Unit
     [TestFixture]
     class TemperatureControllerUnitTest
     {
-        private TemperatureController _uut;
+        private ITempControl _uut;
         private ITempGauge _tempGauge;
         private IThermalRelay _thermalRelay;
         private ILog _log;
@@ -23,11 +23,13 @@ namespace SWTReeksamen.Test.Unit
             _uut = new TemperatureController(_tempGauge, _thermalRelay,_log);
         }
 
-        [Test]
-        public void NoCallsWereRecievedAtStart()
+        [TestCase(-1)]
+        [TestCase(2)]
+        [TestCase(4)]
+        public void NoCallsWereRecievedAtStart(int temp)
         {
             //Verificerer at der ikke sker noget ved opstart
-            _log.DidNotReceive().LogRelayOff();
+            _log.DidNotReceive().LogRelayOff(temp);
         }
 
         [Test]
@@ -38,12 +40,14 @@ namespace SWTReeksamen.Test.Unit
             _thermalRelay.Received(1).TurnOn();
         }
         
-        [Test]
-        public void HandleTempChangedEvent_InStateOff_LogsOnceWhenTurnedOn()
+        [TestCase(-3)]
+        [TestCase(-2)]
+        [TestCase(-1)]
+        public void HandleTempChangedEvent_InStateOff_LogsOnceWhenTurnedOn(int temp)
         {
             //Tester at der kun logges en gang når at temperaturen er under 0 og relæeet tænder.
-            _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = -2 });
-            _log.Received(1).LogRelayOn();
+            _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = temp});
+            _log.Received(1).LogRelayOn(temp);
         }
 
         [TestCase(5)]
@@ -63,7 +67,7 @@ namespace SWTReeksamen.Test.Unit
         {
             //Tester at der ikkelogges noget hvis temperaturen er over 2 og state allerede er i slukket
             _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = temp });
-            _log.DidNotReceive().LogRelayOn();
+            _log.DidNotReceive().LogRelayOn(temp);
         }
 
 
@@ -98,13 +102,15 @@ namespace SWTReeksamen.Test.Unit
             _thermalRelay.Received(1).TurnOff();
         }
 
-        [Test]
-        public void HandleTempChangedEvent_InStateOn_LogRelayOff_IsCalledOnce()
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void HandleTempChangedEvent_InStateOn_LogRelayOff_IsCalledOnce(int offtemp)
         {
             //Tester at der logges en gang når temperaturen er over 2 og relæet slukkes. 
             _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = -2 });
-            _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = 3 });
-            _log.Received(1).LogRelayOff();
+            _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = offtemp});
+            _log.Received(1).LogRelayOff(offtemp);
         }
 
         [Test]
@@ -141,7 +147,7 @@ namespace SWTReeksamen.Test.Unit
             {
                 _tempGauge.TempChangedEvent += Raise.EventWith(new TempChangedEventArgs { Temp = testTemp });
             }
-            _log.Received(1).LogRelayOn();
+            _log.Received(1).LogRelayOn(testTemp);
         }
 
         [TestCase(4, 3)]

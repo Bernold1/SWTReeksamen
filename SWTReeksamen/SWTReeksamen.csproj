@@ -41,18 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Boundaries\Log.cs" />
+    <Compile Include="Boundaries\LogWriter.cs" />
+    <Compile Include="Boundaries\TimeProvider.cs" />
     <Compile Include="Controllers\TemperatureController.cs" />
     <Compile Include="Interfaces\ICameraControl.cs" />
     <Compile Include="Interfaces\ICameraRelay.cs" />
     <Compile Include="Interfaces\IDisplay.cs" />
     <Compile Include="Interfaces\ILog.cs" />
+    <Compile Include="Interfaces\ILogWriter.cs" />
     <Compile Include="Interfaces\ITempControl.cs" />
     <Compile Include="Interfaces\ITempGauge.cs" />
     <Compile Include="Interfaces\IThermalRelay.cs" />
+    <Compile Include="Interfaces\ITimeProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Boundaries\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
