@@ -41,12 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\TemperatureController.cs" />
+    <Compile Include="Interfaces\ICameraControl.cs" />
+    <Compile Include="Interfaces\ICameraRelay.cs" />
+    <Compile Include="Interfaces\IDisplay.cs" />
+    <Compile Include="Interfaces\ILog.cs" />
+    <Compile Include="Interfaces\ITempControl.cs" />
+    <Compile Include="Interfaces\ITempGauge.cs" />
+    <Compile Include="Interfaces\IThermalRelay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Boundaries\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
