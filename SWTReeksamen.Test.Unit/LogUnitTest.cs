@@ -27,6 +27,7 @@ namespace SWTReeksamen.Test.Unit
         [TestCase(-10)]
         public void LogRelayOn_OnNegativeBoundaryValues_HasCorrectOutput(int temp)
         {
+            _timeProvider.TimeStamp().Returns("08-08-2019 17:00:00");
             _uut.LogRelayOn(temp);
             //Not possible to test if text is actually written to a log file
             //as it is an uncontrollable external dependency
@@ -39,6 +40,7 @@ namespace SWTReeksamen.Test.Unit
         [TestCase(5)]
         public void LogRelayOff_OnPositiveBoundaryValuesOver2_HasCorrectOutput(int temp)
         {
+            _timeProvider.TimeStamp().Returns("08-08-2019 17:00:00");
             _uut.LogRelayOff(temp);
             //Testing the correct text
             _logWriter.Received(1).WriteToLog(_timeProvider.TimeStamp() + $": Temperatur: {temp}. Varme slukket.");
@@ -49,6 +51,7 @@ namespace SWTReeksamen.Test.Unit
         [TestCase(5)]
         public void LogRelayOff_OnPositiveBoundaryValuesOver2_HasWrongOutput(int temp)
         {
+            _timeProvider.TimeStamp().Returns("08-08-2019 17:00:00");
             _uut.LogRelayOff(temp);
             //Testing the wrong text
             _logWriter.DidNotReceive().WriteToLog(_timeProvider.TimeStamp() + $": Temperatur: {temp}. Varme tændt.");
